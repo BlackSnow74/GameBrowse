@@ -15,12 +15,12 @@ function App() {
   const [ordering, setOrdering] = useState("")
 
   useEffect(() => {
-    useEffect(() => {
       document.title = search
         ? `${search} - GameBrowse`
         : "GameBrowse"
       }, [search])
-
+      
+  useEffect(() => {
     const timeoutId = setTimeout(() => {
       setIsLoading(true)
       setError("")
