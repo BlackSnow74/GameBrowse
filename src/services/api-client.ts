@@ -6,12 +6,14 @@ interface GetGamesParams {
   search?: string
   genre?: string
   platform?: string
+  ordering?: string
 }
 
 export async function getGames({
   search = "",
   genre = "",
   platform = "",
+  ordering = "",
 }: GetGamesParams = {}) {
   const params = new URLSearchParams({
     key: API_KEY,
@@ -28,6 +30,10 @@ export async function getGames({
 
   if (platform) {
     params.set("platforms", platform)
+  }
+
+  if (ordering) {
+    params.set("ordering", ordering)
   }
 
   const response = await fetch(
