@@ -3,6 +3,7 @@ import { getGames } from "./services/api-client"
 import type { Game } from "./types"
 import Navbar from "./components/Navbar"
 import GameCard from "./components/GameCard"
+import GameCardSkeleton from "./components/GameCardSkeleton"
 
 function App() {
   const [games, setGames] = useState<Game[]>([])
@@ -11,8 +12,15 @@ function App() {
   const [search, setSearch] = useState("")
   const [genre, setGenre] = useState("")
   const [platform, setPlatform] = useState("")
+  const [ordering, setOrdering] = useState("")
 
   useEffect(() => {
+    useEffect(() => {
+      document.title = search
+        ? `${search} - GameBrowse`
+        : "GameBrowse"
+      }, [search])
+
     const timeoutId = setTimeout(() => {
       setIsLoading(true)
       setError("")
@@ -21,6 +29,7 @@ function App() {
         search,
         genre,
         platform,
+        ordering,
       })
         .then((data) => {
           setGames(data.results)
@@ -34,7 +43,7 @@ function App() {
     }, 500)
 
     return () => clearTimeout(timeoutId)
-  }, [search, genre, platform])
+  }, [search, genre, platform, ordering])
 
   return (
     <div className="min-h-screen bg-zinc-900">
@@ -82,12 +91,27 @@ function App() {
             <option value="7">Nintendo Switch</option>
           </select>
 
-          {(genre || platform) && (
+          <select
+            value={ordering}
+            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-white outline-none"
+            onChange={(event) => setOrdering(event.target.value)}
+          >
+            <option value="">Relevance</option>
+            <option value="-rating">Rating: High to Low</option>
+            <option value="rating">Rating: Low to High</option>
+            <option value="-released">Release Date: Newest</option>
+            <option value="released">Release Date: Oldest</option>
+            <option value="name">Name: A → Z</option>
+            <option value="-name">Name: Z → A</option>
+          </select>
+
+          {(genre || platform || ordering) && (
             <button
               type="button"
               onClick={() => {
                 setGenre("")
                 setPlatform("")
+                setOrdering("") 
               }}
               className="rounded-lg border border-zinc-700 px-4 py-2 text-zinc-300 hover:bg-zinc-800"
             >
@@ -97,9 +121,11 @@ function App() {
         </div>
 
         {isLoading && (
-          <p className="text-zinc-400">
-            Loading games...
-          </p>
+          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <GameCardSkeleton key={index} />
+            ))}
+         </div>
         )}
 
         {error && (
