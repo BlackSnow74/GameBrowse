@@ -2,9 +2,36 @@ const API_KEY = import.meta.env.VITE_RAWG_API_KEY
 
 const BASE_URL = "https://api.rawg.io/api"
 
-export async function getGames() {
+interface GetGamesParams {
+  search?: string
+  genre?: string
+  platform?: string
+}
+
+export async function getGames({
+  search = "",
+  genre = "",
+  platform = "",
+}: GetGamesParams = {}) {
+  const params = new URLSearchParams({
+    key: API_KEY,
+    page_size: "20",
+  })
+
+  if (search.trim()) {
+    params.set("search", search.trim())
+  }
+
+  if (genre) {
+    params.set("genres", genre)
+  }
+
+  if (platform) {
+    params.set("platforms", platform)
+  }
+
   const response = await fetch(
-    `${BASE_URL}/games?key=${API_KEY}`
+    `${BASE_URL}/games?${params.toString()}`
   )
 
   if (!response.ok) {
