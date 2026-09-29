@@ -4,8 +4,10 @@ import type { Game } from "./types"
 import Navbar from "./components/Navbar"
 import GameCard from "./components/GameCard"
 import GameCardSkeleton from "./components/GameCardSkeleton"
+import { Routes, Route } from "react-router-dom"
+import GameDetailsPage from "./pages/GameDetailsPage"
 
-function App() {
+function HomePage() {
   const [games, setGames] = useState<Game[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
@@ -149,6 +151,15 @@ function App() {
         )}
       </main>
     </div>
+  )
+}
+
+function App() {
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/games/:id" element={<GameDetailsPage />} />
+    </Routes>
   )
 }
 

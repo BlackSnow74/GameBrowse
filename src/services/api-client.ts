@@ -46,3 +46,15 @@ export async function getGames({
 
   return response.json()
 }
+
+export async function getGameDetails(id: number) {
+  const response = await fetch(
+    `${BASE_URL}/games/${id}?key=${API_KEY}`
+  )
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch game details")
+  }
+
+  return response.json()
+}

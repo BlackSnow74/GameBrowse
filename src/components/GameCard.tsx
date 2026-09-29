@@ -1,4 +1,5 @@
 import type { Game } from "../types"
+import { Link } from "react-router-dom"
 
 interface GameCardProps {
   game: Game
@@ -6,7 +7,8 @@ interface GameCardProps {
 
 function GameCard({ game }: GameCardProps) {
   return (
-    <article className="overflow-hidden rounded-lg bg-zinc-800 shadow">
+  <Link to={`/games/${game.id}`}>
+    <article className="overflow-hidden rounded-lg bg-zinc-800 shadow transition hover:-translate-y-1 hover:shadow-xl">
       <img
         src={game.background_image}
         alt={game.name}
@@ -23,7 +25,8 @@ function GameCard({ game }: GameCardProps) {
         </p>
       </div>
     </article>
-  )
+  </Link>
+)
 }
 
 export default GameCard
