@@ -70,14 +70,14 @@ function HomePage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-900">
+    <div className="min-h-screen bg-zinc-100 transition-colors dark:bg-zinc-900">
       <Navbar
         search={search}
         onSearchChange={setSearch}
       />
 
       <main className="mx-auto max-w-7xl px-6 py-8">
-        <h1 className="mb-6 text-3xl font-bold text-white">
+        <h1 className="mb-6 text-3xl font-bold text-zinc-900 dark:text-white">
           {search
             ? `Search results for "${search}"`
             : "Discover Games"}
@@ -87,7 +87,7 @@ function HomePage() {
           <select
             value={genre}
             onChange={(event) => setGenre(event.target.value)}
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-white outline-none"
+            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
           >
             <option value="">All genres</option>
             <option value="4">Action</option>
@@ -104,7 +104,7 @@ function HomePage() {
           <select
             value={platform}
             onChange={(event) => setPlatform(event.target.value)}
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-white outline-none"
+            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
           >
             <option value="">All platforms</option>
             <option value="4">PC</option>
@@ -118,7 +118,7 @@ function HomePage() {
           <select
             value={ordering}
             onChange={(event) => setOrdering(event.target.value)}
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-white outline-none"
+            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
           >
             <option value="">Relevance</option>
             <option value="-rating">Rating: High to Low</option>
@@ -137,7 +137,7 @@ function HomePage() {
                 setPlatform("")
                 setOrdering("")
               }}
-              className="rounded-lg border border-zinc-700 px-4 py-2 text-zinc-300 hover:bg-zinc-800"
+              className="rounded-lg border border-zinc-300 px-4 py-2 text-zinc-600 transition hover:bg-zinc-200 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
               Clear filters
             </button>
@@ -159,7 +159,7 @@ function HomePage() {
         )}
 
         {!isLoading && !error && games.length === 0 && (
-          <p className="text-zinc-400">
+          <p className="text-zinc-500 dark:text-zinc-400">
             No games found.
           </p>
         )}
@@ -177,12 +177,12 @@ function HomePage() {
                 type="button"
                 onClick={handlePreviousPage}
                 disabled={page === 1 || isLoading}
-                className="rounded-lg border border-zinc-700 px-5 py-2 text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-lg border border-zinc-300 px-5 py-2 text-zinc-900 transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800"
               >
                 ← Previous
               </button>
 
-              <span className="text-zinc-400">
+              <span className="text-zinc-500 dark:text-zinc-400">
                 Page {page}
               </span>
 
@@ -190,7 +190,7 @@ function HomePage() {
                 type="button"
                 onClick={handleNextPage}
                 disabled={!hasNextPage || isLoading}
-                className="rounded-lg border border-zinc-700 px-5 py-2 text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-40"
+                className="rounded-lg border border-zinc-300 px-5 py-2 text-zinc-900 transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800"
               >
                 Next →
               </button>

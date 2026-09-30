@@ -64,11 +64,11 @@ function GameDetailsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-zinc-900 text-white">
+    <div className="min-h-screen bg-zinc-100 text-zinc-900 transition-colors dark:bg-zinc-900 dark:text-white">
       <main className="mx-auto max-w-6xl px-6 py-8">
         <Link
           to="/"
-          className="mb-6 inline-block text-zinc-400 transition hover:text-white"
+          className="mb-6 inline-block text-zinc-500 transition hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-white"
         >
           ← Back to games
         </Link>
@@ -84,7 +84,7 @@ function GameDetailsPage() {
             {game.name}
           </h1>
 
-          <div className="mt-4 flex flex-wrap gap-5 text-zinc-400">
+          <div className="mt-4 flex flex-wrap gap-5 text-zinc-500 dark:text-zinc-400">
             <span>⭐ {game.rating}</span>
             <span>📅 {game.released}</span>
           </div>
@@ -93,7 +93,7 @@ function GameDetailsPage() {
             {game.genres.map((genre) => (
               <span
                 key={genre.id}
-                className="rounded-full bg-zinc-800 px-3 py-1 text-sm"
+                className="rounded-full bg-zinc-200 px-3 py-1 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
               >
                 {genre.name}
               </span>
@@ -105,7 +105,7 @@ function GameDetailsPage() {
               About
             </h2>
 
-            <p className="mt-4 max-w-4xl whitespace-pre-line leading-7 text-zinc-300">
+            <p className="mt-4 max-w-4xl whitespace-pre-line leading-7 text-zinc-600 dark:text-zinc-300">
               {game.description_raw}
             </p>
           </section>
@@ -119,7 +119,7 @@ function GameDetailsPage() {
               {game.platforms.map((item) => (
                 <span
                   key={item.platform.id}
-                  className="rounded-lg bg-zinc-800 px-3 py-2 text-sm text-zinc-300"
+                  className="rounded-lg bg-zinc-200 px-3 py-2 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
                 >
                   {item.platform.name}
                 </span>
