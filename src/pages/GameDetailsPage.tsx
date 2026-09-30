@@ -1,29 +1,14 @@
 import { useEffect, useState } from "react"
-import { useParams } from "react-router-dom"
-import { getGameDetails } from "../services/api-client"
-
-interface GameDetails {
-  id: number
-  name: string
-  description_raw: string
-  background_image: string
-  rating: number
-  released: string
-  website: string
-  genres: {
-    id: number
-    name: string
-  }[]
-  platforms: {
-    platform: {
-      id: number
-      name: string
-    }
-  }[]
-}
+import { Link, useParams } from "react-router-dom"
+import {
+  getGameDetails,
+  getGameScreenshots,
+} from "../services/api-client"
+import type { GameDetails } from "../types"
 
 function GameDetailsPage() {
   const { id } = useParams()
+
   const [game, setGame] = useState<GameDetails | null>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
@@ -31,9 +16,17 @@ function GameDetailsPage() {
   useEffect(() => {
     if (!id) return
 
-    getGameDetails(Number(id))
-      .then((data) => {
-        setGame(data)
+    Promise.all([
+      getGameDetails(Number(id)),
+      getGameScreenshots(Number(id)),
+    ])
+      .then(([gameData, screenshotData]) => {
+        setGame({
+          ...gameData,
+          screenshots: screenshotData.results ?? [],
+        })
+
+        document.title = `${gameData.name} - GameBrowse`
       })
       .catch(() => {
         setError("Failed to load game details.")
@@ -45,16 +38,23 @@ function GameDetailsPage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-zinc-900 p-8 text-white">
-        Loading...
+      <div className="min-h-screen bg-zinc-900 p-8 text-zinc-400">
+        Loading game...
       </div>
     )
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-zinc-900 p-8 text-red-400">
-        {error}
+      <div className="min-h-screen bg-zinc-900 p-8">
+        <p className="text-red-400">{error}</p>
+
+        <Link
+          to="/"
+          className="mt-6 inline-block text-white underline"
+        >
+          ← Back to games
+        </Link>
       </div>
     )
   }
@@ -65,66 +65,98 @@ function GameDetailsPage() {
 
   return (
     <div className="min-h-screen bg-zinc-900 text-white">
-      <main className="mx-auto max-w-5xl px-6 py-10">
+      <main className="mx-auto max-w-6xl px-6 py-8">
+        <Link
+          to="/"
+          className="mb-6 inline-block text-zinc-400 transition hover:text-white"
+        >
+          ← Back to games
+        </Link>
+
         <img
           src={game.background_image}
           alt={game.name}
-          className="mb-8 h-96 w-full rounded-xl object-cover"
+          className="h-72 w-full rounded-xl object-cover md:h-96"
         />
 
-        <h1 className="text-4xl font-bold">
-          {game.name}
-        </h1>
+        <div className="mt-8">
+          <h1 className="text-4xl font-bold md:text-5xl">
+            {game.name}
+          </h1>
 
-        <div className="mt-4 flex flex-wrap gap-4 text-zinc-400">
-          <span>⭐ {game.rating}</span>
-          <span>📅 {game.released}</span>
-        </div>
+          <div className="mt-4 flex flex-wrap gap-5 text-zinc-400">
+            <span>⭐ {game.rating}</span>
+            <span>📅 {game.released}</span>
+          </div>
 
-        <div className="mt-6 flex flex-wrap gap-2">
-          {game.genres.map((genre) => (
-            <span
-              key={genre.id}
-              className="rounded-full bg-zinc-800 px-3 py-1 text-sm"
+          <div className="mt-6 flex flex-wrap gap-2">
+            {game.genres.map((genre) => (
+              <span
+                key={genre.id}
+                className="rounded-full bg-zinc-800 px-3 py-1 text-sm"
+              >
+                {genre.name}
+              </span>
+            ))}
+          </div>
+
+          <section className="mt-10">
+            <h2 className="text-2xl font-bold">
+              About
+            </h2>
+
+            <p className="mt-4 max-w-4xl whitespace-pre-line leading-7 text-zinc-300">
+              {game.description_raw}
+            </p>
+          </section>
+
+          <section className="mt-10">
+            <h2 className="text-2xl font-bold">
+              Platforms
+            </h2>
+
+            <div className="mt-4 flex flex-wrap gap-2">
+              {game.platforms.map((item) => (
+                <span
+                  key={item.platform.id}
+                  className="rounded-lg bg-zinc-800 px-3 py-2 text-sm text-zinc-300"
+                >
+                  {item.platform.name}
+                </span>
+              ))}
+            </div>
+          </section>
+
+          {game.screenshots?.length > 0 && (
+            <section className="mt-10">
+              <h2 className="text-2xl font-bold">
+                Screenshots
+              </h2>
+
+              <div className="mt-4 grid gap-4 sm:grid-cols-2">
+                {game.screenshots.map((screenshot) => (
+                  <img
+                    key={screenshot.id}
+                    src={screenshot.image}
+                    alt={`${game.name} screenshot`}
+                    className="rounded-lg object-cover"
+                  />
+                ))}
+              </div>
+            </section>
+          )}
+
+          {game.website && (
+            <a
+              href={game.website}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-10 inline-block rounded-lg bg-white px-5 py-3 font-medium text-black transition hover:bg-zinc-200"
             >
-              {genre.name}
-            </span>
-          ))}
+              Official Website ↗
+            </a>
+          )}
         </div>
-
-        <h2 className="mt-10 text-2xl font-bold">
-          About
-        </h2>
-
-        <p className="mt-4 leading-7 text-zinc-300">
-          {game.description_raw}
-        </p>
-
-        <h2 className="mt-10 text-2xl font-bold">
-          Platforms
-        </h2>
-
-        <div className="mt-4 flex flex-wrap gap-2">
-          {game.platforms.map((item) => (
-            <span
-              key={item.platform.id}
-              className="rounded-lg bg-zinc-800 px-3 py-2 text-sm"
-            >
-              {item.platform.name}
-            </span>
-          ))}
-        </div>
-
-        {game.website && (
-          <a
-            href={game.website}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="mt-8 inline-block rounded-lg bg-white px-5 py-3 font-medium text-black"
-          >
-            Official Website
-          </a>
-        )}
       </main>
     </div>
   )
