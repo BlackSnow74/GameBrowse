@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react"
+import { Routes, Route } from "react-router-dom"
 import { getGames } from "./services/api-client"
 import type { Game } from "./types"
 import Navbar from "./components/Navbar"
 import GameCard from "./components/GameCard"
 import GameCardSkeleton from "./components/GameCardSkeleton"
-import { Routes, Route } from "react-router-dom"
 import GameDetailsPage from "./pages/GameDetailsPage"
 
 function HomePage() {
@@ -15,13 +15,19 @@ function HomePage() {
   const [genre, setGenre] = useState("")
   const [platform, setPlatform] = useState("")
   const [ordering, setOrdering] = useState("")
+  const [page, setPage] = useState(1)
+  const [hasNextPage, setHasNextPage] = useState(true)
 
   useEffect(() => {
-      document.title = search
-        ? `${search} - GameBrowse`
-        : "GameBrowse"
-      }, [search])
-      
+    document.title = search
+      ? `${search} - GameBrowse`
+      : "GameBrowse"
+  }, [search])
+
+  useEffect(() => {
+    setPage(1)
+  }, [search, genre, platform, ordering])
+
   useEffect(() => {
     const timeoutId = setTimeout(() => {
       setIsLoading(true)
@@ -32,9 +38,11 @@ function HomePage() {
         genre,
         platform,
         ordering,
+        page,
       })
         .then((data) => {
           setGames(data.results)
+          setHasNextPage(Boolean(data.next))
         })
         .catch(() => {
           setError("Failed to load games.")
@@ -45,17 +53,31 @@ function HomePage() {
     }, 500)
 
     return () => clearTimeout(timeoutId)
-  }, [search, genre, platform, ordering])
+  }, [search, genre, platform, ordering, page])
+
+  function handleNextPage() {
+    if (hasNextPage && !isLoading) {
+      setPage((currentPage) => currentPage + 1)
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
+
+  function handlePreviousPage() {
+    if (page > 1 && !isLoading) {
+      setPage((currentPage) => currentPage - 1)
+      window.scrollTo({ top: 0, behavior: "smooth" })
+    }
+  }
 
   return (
-    <div className="min-h-screen bg-zinc-900">
+    <div className="min-h-screen bg-zinc-100 transition-colors dark:bg-zinc-900">
       <Navbar
         search={search}
         onSearchChange={setSearch}
       />
 
       <main className="mx-auto max-w-7xl px-6 py-8">
-        <h1 className="mb-6 text-3xl font-bold text-white">
+        <h1 className="mb-6 text-3xl font-bold text-zinc-900 dark:text-white">
           {search
             ? `Search results for "${search}"`
             : "Discover Games"}
@@ -65,7 +87,7 @@ function HomePage() {
           <select
             value={genre}
             onChange={(event) => setGenre(event.target.value)}
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-white outline-none"
+            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
           >
             <option value="">All genres</option>
             <option value="4">Action</option>
@@ -82,7 +104,7 @@ function HomePage() {
           <select
             value={platform}
             onChange={(event) => setPlatform(event.target.value)}
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-white outline-none"
+            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
           >
             <option value="">All platforms</option>
             <option value="4">PC</option>
@@ -95,8 +117,8 @@ function HomePage() {
 
           <select
             value={ordering}
-            className="rounded-lg border border-zinc-700 bg-zinc-800 px-4 py-2 text-white outline-none"
             onChange={(event) => setOrdering(event.target.value)}
+            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
           >
             <option value="">Relevance</option>
             <option value="-rating">Rating: High to Low</option>
@@ -113,9 +135,9 @@ function HomePage() {
               onClick={() => {
                 setGenre("")
                 setPlatform("")
-                setOrdering("") 
+                setOrdering("")
               }}
-              className="rounded-lg border border-zinc-700 px-4 py-2 text-zinc-300 hover:bg-zinc-800"
+              className="rounded-lg border border-zinc-300 px-4 py-2 text-zinc-600 transition hover:bg-zinc-200 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
             >
               Clear filters
             </button>
@@ -127,7 +149,7 @@ function HomePage() {
             {Array.from({ length: 8 }).map((_, index) => (
               <GameCardSkeleton key={index} />
             ))}
-         </div>
+          </div>
         )}
 
         {error && (
@@ -137,17 +159,43 @@ function HomePage() {
         )}
 
         {!isLoading && !error && games.length === 0 && (
-          <p className="text-zinc-400">
+          <p className="text-zinc-500 dark:text-zinc-400">
             No games found.
           </p>
         )}
 
         {!isLoading && !error && games.length > 0 && (
-          <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {games.map((game) => (
-              <GameCard key={game.id} game={game} />
-            ))}
-          </div>
+          <>
+            <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+              {games.map((game) => (
+                <GameCard key={game.id} game={game} />
+              ))}
+            </div>
+
+            <div className="mt-10 flex items-center justify-center gap-4">
+              <button
+                type="button"
+                onClick={handlePreviousPage}
+                disabled={page === 1 || isLoading}
+                className="rounded-lg border border-zinc-300 px-5 py-2 text-zinc-900 transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800"
+              >
+                ← Previous
+              </button>
+
+              <span className="text-zinc-500 dark:text-zinc-400">
+                Page {page}
+              </span>
+
+              <button
+                type="button"
+                onClick={handleNextPage}
+                disabled={!hasNextPage || isLoading}
+                className="rounded-lg border border-zinc-300 px-5 py-2 text-zinc-900 transition hover:bg-zinc-200 disabled:cursor-not-allowed disabled:opacity-40 dark:border-zinc-700 dark:text-white dark:hover:bg-zinc-800"
+              >
+                Next →
+              </button>
+            </div>
+          </>
         )}
       </main>
     </div>
