@@ -8,6 +8,7 @@ interface GetGamesParams {
   platform?: string
   ordering?: string
   page?: number
+  signal?: AbortSignal
 }
 
 export async function getGames({
@@ -16,6 +17,7 @@ export async function getGames({
   platform = "",
   ordering = "",
   page = 1,
+  signal,
 }: GetGamesParams = {}) {
   const params = new URLSearchParams({
     key: API_KEY,
@@ -40,8 +42,11 @@ export async function getGames({
   }
 
   const response = await fetch(
-    `${BASE_URL}/games?${params.toString()}`
-  )
+  `${BASE_URL}/games?${params.toString()}`,
+  {
+    signal,
+  }
+)
 
   if (!response.ok) {
     throw new Error("Failed to fetch games")
@@ -50,9 +55,15 @@ export async function getGames({
   return response.json()
 }
 
-export async function getGameDetails(id: number) {
+export async function getGameDetails(
+  id: number,
+  signal?: AbortSignal
+) {
   const response = await fetch(
-    `${BASE_URL}/games/${id}?key=${API_KEY}`
+    `${BASE_URL}/games/${id}?key=${API_KEY}`,
+    {
+      signal,
+    }
   )
 
   if (!response.ok) {
@@ -62,9 +73,15 @@ export async function getGameDetails(id: number) {
   return response.json()
 }
 
-export async function getGameScreenshots(id: number) {
+export async function getGameScreenshots(
+  id: number,
+  signal?: AbortSignal
+) {
   const response = await fetch(
-    `${BASE_URL}/games/${id}/screenshots?key=${API_KEY}`
+    `${BASE_URL}/games/${id}/screenshots?key=${API_KEY}`,
+    {
+      signal,
+    }
   )
 
   if (!response.ok) {
