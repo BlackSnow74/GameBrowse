@@ -1,18 +1,15 @@
-import { useEffect, useState } from "react"
+import { useEffect, useState } from "react";
 
 function ThemeToggle() {
   const [isDark, setIsDark] = useState(() => {
-    return localStorage.getItem("theme") !== "light"
-  })
+    return localStorage.getItem("theme") !== "light";
+  });
 
   useEffect(() => {
-    document.documentElement.classList.toggle("dark", isDark)
+    document.documentElement.classList.toggle("dark", isDark);
 
-    localStorage.setItem(
-      "theme",
-      isDark ? "dark" : "light"
-    )
-  }, [isDark])
+    localStorage.setItem("theme", isDark ? "dark" : "light");
+  }, [isDark]);
 
   return (
     <button
@@ -23,7 +20,7 @@ function ThemeToggle() {
     >
       {isDark ? "☀️" : "🌙"}
     </button>
-  )
+  );
 }
 
-export default ThemeToggle
+export default ThemeToggle;

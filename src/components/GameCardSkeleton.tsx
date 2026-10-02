@@ -9,7 +9,7 @@ function GameCardSkeleton() {
         <div className="mt-3 h-4 w-1/4 animate-pulse rounded bg-zinc-200 dark:bg-zinc-700" />
       </div>
     </article>
-  )
+  );
 }
 
-export default GameCardSkeleton
+export default GameCardSkeleton;
