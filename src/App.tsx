@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
+import useGames from "./hooks/useGames"
 import { Routes, Route } from "react-router-dom"
-import { getGames } from "./services/api-client"
 import type { Game } from "./types"
 import Navbar from "./components/Navbar"
 import GameCard from "./components/GameCard"
@@ -8,52 +8,27 @@ import GameCardSkeleton from "./components/GameCardSkeleton"
 import GameDetailsPage from "./pages/GameDetailsPage"
 
 function HomePage() {
-  const [games, setGames] = useState<Game[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState("")
   const [search, setSearch] = useState("")
   const [genre, setGenre] = useState("")
   const [platform, setPlatform] = useState("")
   const [ordering, setOrdering] = useState("")
   const [page, setPage] = useState(1)
-  const [hasNextPage, setHasNextPage] = useState(true)
-
-  useEffect(() => {
-    document.title = search
-      ? `${search} - GameBrowse`
-      : "GameBrowse"
-  }, [search])
+  const {
+  games,
+  isLoading,
+  error,
+  hasNextPage,
+} = useGames({
+  search,
+  genre,
+  platform,
+  ordering,
+  page,
+})
 
   useEffect(() => {
     setPage(1)
   }, [search, genre, platform, ordering])
-
-  useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      setIsLoading(true)
-      setError("")
-
-      getGames({
-        search,
-        genre,
-        platform,
-        ordering,
-        page,
-      })
-        .then((data) => {
-          setGames(data.results)
-          setHasNextPage(Boolean(data.next))
-        })
-        .catch(() => {
-          setError("Failed to load games.")
-        })
-        .finally(() => {
-          setIsLoading(false)
-        })
-    }, 500)
-
-    return () => clearTimeout(timeoutId)
-  }, [search, genre, platform, ordering, page])
 
   function handleNextPage() {
     if (hasNextPage && !isLoading) {
@@ -83,11 +58,11 @@ function HomePage() {
             : "Discover Games"}
         </h1>
 
-        <div className="mb-8 flex flex-wrap gap-4">
+        <div className="mb-8 flex flex-col gap-4 rounded-xl bg-white p-4 shadow-sm dark:bg-zinc-800 sm:flex-row sm:flex-wrap sm:items-center">
           <select
             value={genre}
             onChange={(event) => setGenre(event.target.value)}
-            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+            className="rounded-lg border border-zinc-300 bg-zinc-100 px-4 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:focus:border-zinc-500"
           >
             <option value="">All genres</option>
             <option value="4">Action</option>
@@ -104,7 +79,7 @@ function HomePage() {
           <select
             value={platform}
             onChange={(event) => setPlatform(event.target.value)}
-            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+            className="rounded-lg border border-zinc-300 bg-zinc-100 px-4 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:focus:border-zinc-500"
           >
             <option value="">All platforms</option>
             <option value="4">PC</option>
@@ -118,7 +93,7 @@ function HomePage() {
           <select
             value={ordering}
             onChange={(event) => setOrdering(event.target.value)}
-            className="rounded-lg border border-zinc-300 bg-white px-4 py-2 text-zinc-900 outline-none dark:border-zinc-700 dark:bg-zinc-800 dark:text-white"
+            className="rounded-lg border border-zinc-300 bg-zinc-100 px-4 py-2.5 text-sm text-zinc-900 outline-none transition focus:border-zinc-500 dark:border-zinc-700 dark:bg-zinc-900 dark:text-white dark:focus:border-zinc-500"
           >
             <option value="">Relevance</option>
             <option value="-rating">Rating: High to Low</option>
@@ -137,11 +112,12 @@ function HomePage() {
                 setPlatform("")
                 setOrdering("")
               }}
-              className="rounded-lg border border-zinc-300 px-4 py-2 text-zinc-600 transition hover:bg-zinc-200 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-800"
+              className="rounded-lg border border-zinc-300 px-4 py-2.5 text-sm font-medium text-zinc-700 transition hover:bg-zinc-200 dark:border-zinc-700 dark:text-zinc-300 dark:hover:bg-zinc-700"
             >
               Clear filters
             </button>
           )}
+          
         </div>
 
         {isLoading && (
