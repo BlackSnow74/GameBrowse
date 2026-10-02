@@ -1,32 +1,28 @@
-import { Link, useParams } from "react-router-dom"
-import useGameDetails from "../hooks/useGameDetails"
-import { useEffect } from "react"
+import { Link, useParams } from "react-router-dom";
+import useGameDetails from "../hooks/useGameDetails";
+import { useEffect } from "react";
 
 function GameDetailsPage() {
-  const { id } = useParams()
+  const { id } = useParams();
 
-  const {
-    game,
-    isLoading,
-    error,
-  } = useGameDetails(id)
+  const { game, isLoading, error } = useGameDetails(id);
 
   useEffect(() => {
-  if (game) {
-    document.title = `${game.name} - GameBrowse`
-  }
+    if (game) {
+      document.title = `${game.name} - GameBrowse`;
+    }
 
-  return () => {
-    document.title = "GameBrowse"
-  }
-  }, [game])
+    return () => {
+      document.title = "GameBrowse";
+    };
+  }, [game]);
 
   if (isLoading) {
     return (
       <div className="min-h-screen bg-zinc-900 p-8 text-zinc-400">
         Loading game...
       </div>
-    )
+    );
   }
 
   if (error) {
@@ -34,18 +30,15 @@ function GameDetailsPage() {
       <div className="min-h-screen bg-zinc-900 p-8">
         <p className="text-red-400">{error}</p>
 
-        <Link
-          to="/"
-          className="mt-6 inline-block text-white underline"
-        >
+        <Link to="/" className="mt-6 inline-block text-white underline">
           ← Back to games
         </Link>
       </div>
-    )
+    );
   }
 
   if (!game) {
-    return null
+    return null;
   }
 
   return (
@@ -65,27 +58,22 @@ function GameDetailsPage() {
             className="h-72 w-full object-cover md:h-[28rem]"
           />
 
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-              <div className="absolute bottom-0 left-0 p-6 md:p-8">
-                <h1 className="text-3xl font-bold text-white md:text-5xl">
-                  {game.name}
-                </h1>
+          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+          <div className="absolute bottom-0 left-0 p-6 md:p-8">
+            <h1 className="text-3xl font-bold text-white md:text-5xl">
+              {game.name}
+            </h1>
 
-                <div className="mt-3 flex flex-wrap gap-4 text-sm text-zinc-200">
-                  <span>⭐ {game.rating}</span>
-                  <span>📅 {game.released}</span>
-                 </div>
-                 
-              </div>
+            <div className="mt-3 flex flex-wrap gap-4 text-sm text-zinc-200">
+              <span>⭐ {game.rating}</span>
+              <span>📅 {game.released}</span>
+            </div>
           </div>
+        </div>
 
-
-          <div className="mt-8">
-        
+        <div className="mt-8">
           <section className="mt-10">
-            <h2 className="text-2xl font-bold">
-              About
-            </h2>
+            <h2 className="text-2xl font-bold">About</h2>
 
             <p className="mt-4 max-w-4xl whitespace-pre-line leading-7 text-zinc-600 dark:text-zinc-300">
               {game.description_raw}
@@ -93,10 +81,7 @@ function GameDetailsPage() {
           </section>
 
           <section className="mt-10">
-            <h2 className="text-2xl font-bold">
-              Platforms
-            </h2>
-            
+            <h2 className="text-2xl font-bold">Platforms</h2>
 
             <div className="mt-4 flex flex-wrap gap-2">
               {game.platforms.map((item) => (
@@ -111,26 +96,22 @@ function GameDetailsPage() {
           </section>
 
           <section className="mt-10">
-            <h2 className="text-2xl font-bold">
-              Genres
-            </h2>
-          <div className="mt-6 flex flex-wrap gap-2">
-            {game.genres.map((genre) => (
-              <span
-                key={genre.id}
-                className="rounded-full bg-zinc-200 px-3 py-1 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
-              >
-                {genre.name}
-              </span>
-            ))}
-          </div>
-        </section>
+            <h2 className="text-2xl font-bold">Genres</h2>
+            <div className="mt-6 flex flex-wrap gap-2">
+              {game.genres.map((genre) => (
+                <span
+                  key={genre.id}
+                  className="rounded-full bg-zinc-200 px-3 py-1 text-sm text-zinc-700 dark:bg-zinc-800 dark:text-zinc-200"
+                >
+                  {genre.name}
+                </span>
+              ))}
+            </div>
+          </section>
 
           {game.screenshots?.length > 0 && (
             <section className="mt-10">
-              <h2 className="text-2xl font-bold">
-                Screenshots
-              </h2>
+              <h2 className="text-2xl font-bold">Screenshots</h2>
 
               <div className="mt-4 grid grid-cols-1 gap-5 sm:grid-cols-2">
                 {game.screenshots.map((screenshot) => (
@@ -147,7 +128,6 @@ function GameDetailsPage() {
                   </div>
                 ))}
               </div>
-              
             </section>
           )}
 
@@ -164,7 +144,7 @@ function GameDetailsPage() {
         </div>
       </main>
     </div>
-  )
+  );
 }
 
-export default GameDetailsPage
+export default GameDetailsPage;

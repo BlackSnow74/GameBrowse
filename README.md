@@ -1,75 +1,139 @@
-# React + TypeScript + Vite
+# 🎮 GameBrowse
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+GameBrowse is a React + TypeScript web application for discovering and exploring video games using the RAWG Video Games Database API.
 
-Currently, two official plugins are available:
+Users can search for games, filter and sort results, browse multiple pages, and open detailed pages containing information, platforms, genres, and screenshots.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## ✨ Features
 
-## React Compiler
+- 🔎 Search games
+- 🎭 Filter by genre
+- 🎮 Filter by platform
+- ↕️ Sort games by rating, release date, and name
+- 📄 Pagination
+- 🖼️ Game screenshots
+- 📋 Detailed game information
+- 🌙 Dark/light mode
+- 💾 Persistent theme preference
+- ⚡ Loading skeletons
+- ❌ Error and empty states
+- 📱 Responsive design
+- ⏱️ Debounced search
+- 🛑 Request cancellation with AbortController
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- React
+- TypeScript
+- Vite
+- Tailwind CSS
+- React Router
+- RAWG API
+- ESLint
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📁 Project Structure
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```text
+src/
+├── components/
+│   ├── GameCard.tsx
+│   ├── GameCardSkeleton.tsx
+│   ├── Navbar.tsx
+│   └── ThemeToggle.tsx
+│
+├── hooks/
+│   ├── useGames.ts
+│   └── useGameDetails.ts
+│
+├── pages/
+│   └── GameDetailsPage.tsx
+│
+├── services/
+│   └── api-client.ts
+│
+├── App.tsx
+├── main.tsx
+├── types.ts
+└── index.css
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+### 🚀 Getting Started
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+**1. Clone the repository**
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+```bash
+git clone https://github.com/BlackSnow74/GameBrowse.git
+cd GameBrowse
+```
+
+**2. Install dependencies**
+
+```bash
+npm install
+```
+
+**3. Create your environment file**
+
+Create a `.env` file in the project root:
 
 ```
+VITE_RAWG_API_KEY=your_rawg_api_key_here
+```
+
+You can use `.env.example` as a template.
+
+**4. Start the development server**
+
+```bash
+npm run dev
+```
+
+### 🔑 API
+
+GameBrowse uses the RAWG Video Games Database API to retrieve game information.
+
+You will need your own RAWG API key to run the project locally.
+
+The API key is provided through the `VITE_RAWG_API_KEY` environment variable.
+
+> Note: Vite client-side environment variables are exposed to the browser. The environment file is ignored by Git to prevent accidentally committing the key, but this does not make the key a server-side secret.
+
+### 📚 What I Practiced
+
+This project helped me practice:
+
+- React component architecture
+- TypeScript interfaces and props
+- React hooks and custom hooks
+- API requests with fetch
+- URL query parameters
+- Debounced user input
+- Loading and error states
+- Pagination
+- React Router
+- Responsive UI development
+- Tailwind CSS
+- Dark/light theme persistence
+- Request cancellation with AbortController
+- Environment variables
+- Git/GitHub workflow
+
+### 📌 Future Improvements
+
+Possible future improvements include:
+
+- Game favorites
+- User accounts
+- More advanced filtering
+- Game recommendations
+- Improved accessibility
+- Backend API proxy
+- Deployment
+
+### 👨‍💻 Author
+
+Built as a personal React/TypeScript learning and portfolio project.
+
+### 🔗 Repository
+
+[GameBrowse on GitHub](https://github.com/BlackSnow74/GameBrowse)

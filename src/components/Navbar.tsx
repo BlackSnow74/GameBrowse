@@ -1,8 +1,8 @@
-import ThemeToggle from "./ThemeToggle"
+import ThemeToggle from "./ThemeToggle";
 
 interface NavbarProps {
-  search: string
-  onSearchChange: (value: string) => void
+  search: string;
+  onSearchChange: (value: string) => void;
 }
 
 function Navbar({ search, onSearchChange }: NavbarProps) {
@@ -28,7 +28,7 @@ function Navbar({ search, onSearchChange }: NavbarProps) {
         <ThemeToggle />
       </div>
     </nav>
-  )
+  );
 }
 
-export default Navbar
+export default Navbar;
