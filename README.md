@@ -1,6 +1,6 @@
 # 🎮 GameBrowse
 
-[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_App-00C7B7?style=for-the-badge&logo=vercel&logoColor=white)]((https://gamesbrowses.vercel.app))
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Visit_App-00C7B7?style=for-the-badge&logo=vercel&logoColor=white)](https://gamesbrowses.vercel.app)
 
 GameBrowse is a React + TypeScript web application for discovering and exploring video games using the RAWG Video Games Database API.
 
